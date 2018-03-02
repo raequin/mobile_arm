@@ -2,6 +2,10 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro"
        name="mobile_ur10">
 
+  <!-- common Gazebo plugins and tags
+       note: there are also Gazebo tags in mobile_base.urdf.xacro to make the corner wheels frictionless -->
+  <xacro:include filename="$(find mobile_arm)/models/common.gazebo.xacro"/>
+
   <!-- mobile base description -->
   <xacro:include filename="$(find mobile_arm)/models/mobile_base/mobile_base.urdf.xacro"/>
 
@@ -15,9 +19,5 @@
     <parent link="chassis" />
     <child link="base_link" />    
   </joint>
-
-  <!-- common Gazebo plugins and tags
-       note: there are also Gazebo tags in mobile_base.urdf.xacro to make the corner wheels frictionless -->
-  <xacro:include filename="$(find mobile_arm)/models/common.gazebo.xacro"/>
       
 </robot>
