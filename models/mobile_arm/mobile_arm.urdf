@@ -4,6 +4,25 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="mobile_ur10" xmlns:xacro="http://ros.org/wiki/xacro">
+  <gazebo>
+    <!-- turn on self-collision detection so that links will not pass through each other -->
+    <self_collide>0</self_collide>
+    <!-- disable the default behavior with PositionJointInterface that causes twists to be cleared -->
+    <preserveWorldVelocity>1</preserveWorldVelocity>
+    <!-- for the mobile base -->
+    <!-- MQMX to (possibly?) replace this with ros control plugin -->
+    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+      <leftJoint>wheel_2_joint</leftJoint>
+      <rightJoint>wheel_5_joint</rightJoint>
+      <robotBaseFrame>chassis</robotBaseFrame>
+      <wheelSeparation>0.56</wheelSeparation>
+      <wheelDiameter>0.142</wheelDiameter>
+      <publishWheelJointState>true</publishWheelJointState>
+      <legacyMode>false</legacyMode>
+    </plugin>
+    <!-- for the UR10, copied from $(find ur_description)/urdf/common.gazebo.xacro -->
+    <plugin filename="libgazebo_ros_control.so" name="ros_control"/>
+  </gazebo>
   <!-- Chassis link -->
   <link name="chassis">
     <visual name="visual">
@@ -488,39 +507,12 @@
     <parent link="chassis"/>
     <child link="base_link"/>
   </joint>
-  <gazebo>
-    <!-- turn on self-collision detection so that links will not pass through each other -->
-    <self_collide>1</self_collide>
-    <!-- for the mobile base -->
-    <!-- MQMX to (possibly?) replace this with ros control plugin -->
-    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-      <leftJoint>wheel_2_joint</leftJoint>
-      <rightJoint>wheel_5_joint</rightJoint>
-      <robotBaseFrame>chassis</robotBaseFrame>
-      <wheelSeparation>0.56</wheelSeparation>
-      <wheelDiameter>0.142</wheelDiameter>
-      <publishWheelJointState>true</publishWheelJointState>
-      <legacyMode>false</legacyMode>
-    </plugin>
-    <!-- for the UR10, copied from $(find ur_description)/urdf/common.gazebo.xacro -->
-    <plugin filename="libgazebo_ros_control.so" name="ros_control">
-      <!--robotNamespace>/</robotNamespace-->
-      <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
-    </plugin>
-    <!--
-	<plugin name="gazebo_ros_power_monitor_controller" filename="libgazebo_ros_power_monitor.so">
-	<alwaysOn>true</alwaysOn>
-	<updateRate>1.0</updateRate>
-	<timeout>5</timeout>
-	<powerStateTopic>power_state</powerStateTopic>
-	<powerStateRate>10.0</powerStateRate>
-	<fullChargeCapacity>87.78</fullChargeCapacity>     
-	<dischargeRate>-474</dischargeRate>
-	<chargeRate>525</chargeRate>
-	<dischargeVoltage>15.52</dischargeVoltage>
-	<chargeVoltage>16.41</chargeVoltage>
-	</plugin>
-    -->
-  </gazebo>
+  <!-- temp attach mobile base to ground -->
+  <!--link name="world" />
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "chassis" />
+    <origin xyz="0.0 0.0 1.0" rpy="0.0 0.0 0.0" />
+  </joint-->
 </robot>
 

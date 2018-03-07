@@ -10,7 +10,8 @@
   <xacro:include filename="$(find mobile_arm)/models/mobile_base/mobile_base.urdf.xacro"/>
 
   <!-- UR10 description -->
-  <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />  
+  <!--xacro:include filename="$(find mobile_arm)/models/my_ur10/my_ur10.urdf.xacro" /-->
+  <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />
   <xacro:ur10_robot prefix="" joint_limited="false"/>
 
   <!-- joint to attach UR10 to mobile base -->
@@ -19,5 +20,13 @@
     <parent link="chassis" />
     <child link="base_link" />    
   </joint>
+
+  <!-- temp attach mobile base to ground -->
+  <!--link name="world" />
+  <joint name="world_joint" type="fixed">
+    <parent link="world" />
+    <child link = "chassis" />
+    <origin xyz="0.0 0.0 1.0" rpy="0.0 0.0 0.0" />
+  </joint-->
       
 </robot>

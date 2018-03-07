@@ -193,7 +193,6 @@
       <velocity_decay/>
       <gravity>1</gravity>
       <velocity_decay/>
-      <self_collide>0</self_collide>
     </link>
     <link name='shoulder_link'>
       <pose frame=''>0 0 0.3033 0 -0 0</pose>
@@ -249,7 +248,7 @@
       </axis>
     </joint>
     <link name='upper_arm_link'>
-      <pose frame=''>0 0.220941 0.3033 -3e-06 1.57079 -3e-06</pose>
+      <pose frame=''>0 0.220941 0.3033 3.14159 1.57079 3.14159</pose>
       <inertial>
         <pose frame=''>0 0 0.306 0 -0 0</pose>
         <mass>12.93</mass>
@@ -302,7 +301,7 @@
       </axis>
     </joint>
     <link name='forearm_link'>
-      <pose frame=''>0.612 0.049041 0.3033 -3e-06 1.57079 -3e-06</pose>
+      <pose frame=''>0.612 0.049041 0.3033 3.14159 1.57079 3.14159</pose>
       <inertial>
         <pose frame=''>0 0 0.28615 0 -0 0</pose>
         <mass>3.87</mass>
@@ -620,15 +619,16 @@
       </axis>
     </joint>
     <static>0</static>
-    <self_collide>1</self_collide>
+    <self_collide>0</self_collide>
+    <preserveWorldVelocity>1</preserveWorldVelocity>
     <plugin name='differential_drive_controller' filename='libgazebo_ros_diff_drive.so'>
       <leftJoint>wheel_2_joint</leftJoint>
       <rightJoint>wheel_5_joint</rightJoint>
       <robotBaseFrame>chassis</robotBaseFrame>
       <wheelSeparation>0.56</wheelSeparation>
       <wheelDiameter>0.142</wheelDiameter>
-      <publishWheelJointState>true</publishWheelJointState>
-      <legacyMode>false</legacyMode>
+      <publishWheelJointState>1</publishWheelJointState>
+      <legacyMode>0</legacyMode>
     </plugin>
     <plugin name='ros_control' filename='libgazebo_ros_control.so'/>
   </model>

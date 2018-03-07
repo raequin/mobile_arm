@@ -4,7 +4,12 @@
   <gazebo>
 
     <!-- turn on self-collision detection so that links will not pass through each other -->
-    <self_collide>1</self_collide>
+    <self_collide>0</self_collide>
+
+
+    <!-- disable the default behavior with PositionJointInterface that causes twists to be cleared -->
+    <!--preserveWorldVelocity>1</preserveWorldVelocity-->
+    <preserve_world_velocity>1</preserve_world_velocity>
 
     
     <!-- for the mobile base -->
