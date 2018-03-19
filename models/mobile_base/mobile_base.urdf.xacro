@@ -152,5 +152,17 @@
   
   <xacro:make_wheel_n_frictionless n="6" />
 
+  
+  <!-- MQMX to (possibly?) replace this with ros control plugin -->
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <leftJoint>wheel_2_joint</leftJoint>
+    <rightJoint>wheel_5_joint</rightJoint>
+    <robotBaseFrame>chassis</robotBaseFrame>
+    <wheelSeparation>${chassis_width - wheel_thickness}</wheelSeparation>
+    <wheelDiameter>${2 * wheel_radius}</wheelDiameter>
+    <publishWheelJointState>true</publishWheelJointState>
+    <legacyMode>false</legacyMode>
+  </plugin>
+
 </robot>
 

@@ -1,26 +1,38 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="sim" default="true" />
   
   <arg name="limited" default="false"/>
 
   <!-- Start Gazebo with an empty world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
 
+  
   <!-- Load the mobile-arm description on the parameter server (?) -->
-  <param name="robot_description" command="$(find xacro)/xacro '$(find mobile_arm)/models/mobile_arm/mobile_arm.urdf.xacro'"/>
-  <!--param name="robot_description" command="$(find mobile_arm)/models/mobile_arm/mobile_arm.sdf" /-->
+  <!--param name="robot_description" command="$(find xacro)/xacro '$(find mobile_arm)/models/mobile_arm/mobile_arm.urdf.xacro'"/-->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mobile_arm)/models/gripper/gripper_01.urdf.xacro'"/>
 
+  
   <!-- Spawn a mobile arm in Gazebo, taking a description from the parameter server -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false"
 	args="-param robot_description -urdf -model mobile_arm -z .05"/>
   <!--node name="spawn_sdf" pkg="gazebo_ros" type="spawn_model" respawn="false"
-	args="-file /home/matt/ROSWorkspaces/catkin_ws/src/mobile_arm/models/mobile_arm/mobile_arm.sdf -sdf -model mobile_arm -z .05"/-->
+      args="-file /home/matt/ROSWorkspaces/catkin_ws/src/mobile_arm/models/mobile_arm/mobile_arm.sdf -sdf -model mobile_arm -z .05"/-->
 
+  
   <!-- arm controller -->
   <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>  
   <!--rosparam file="$(find mobile_arm)/models/my_ur10/pid_for_gazebo_ros_control.yaml" command="load"/-->
   <!--rosparam file="$(find mobile_arm)/models/my_ur10/my_arm_controller_ur10.yaml" command="load"/-->
   <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur10.yaml" command="load"/>
   <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller" respawn="false" output="screen"/>
+
+  
+  <!-- enable use of MoveIt! -->
+  <!-- Remap follow_joint_trajectory -->
+  <remap if="$(arg sim)" from="/follow_joint_trajectory" to="/arm_controller/follow_joint_trajectory"/>
+  <include file="$(find mobile_arm_moveit_config)/launch/move_group.launch" />
+  <!--arg name="sim" value="true" /-->
+  <!--/include-->
 
 </launch>

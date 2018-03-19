@@ -3,22 +3,57 @@
        name="mobile_ur10">
 
   <!-- common Gazebo plugins and tags
-       note: there are also Gazebo tags in mobile_base.urdf.xacro to make the corner wheels frictionless -->
+       note: there are also Gazebo tags in mobile_base.urdf.xacro to make the corner wheels frictionless
+       note2: there are also Gazebo tags in mobile_base.urdf.xacro to configure the differential_drive_controller -->
   <xacro:include filename="$(find mobile_arm)/models/common.gazebo.xacro"/>
 
+  
+  <!-- model descriptions -->
   <!-- mobile base description -->
   <xacro:include filename="$(find mobile_arm)/models/mobile_base/mobile_base.urdf.xacro"/>
 
   <!-- UR10 description -->
   <!--xacro:include filename="$(find mobile_arm)/models/my_ur10/my_ur10.urdf.xacro" /-->
   <xacro:include filename="$(find ur_description)/urdf/ur10.urdf.xacro" />
-  <xacro:ur10_robot prefix="" joint_limited="false"/>
+  <xacro:ur10_robot prefix="" joint_limited="true"/>
 
+  <!-- mount for gripper and camera -->
+  <xacro:include filename="$(find mobile_arm)/models/mount_for_tool/mount_for_tool.urdf.xacro"/>
+
+  <!-- gripper -->
+  <xacro:include filename="$(find mobile_arm)/models/gripper/gripper.urdf.xacro"/>
+
+  <!-- camera -->
+  <xacro:include filename="$(find mobile_arm)/models/depth_camera/depth_camera.urdf.xacro"/>
+
+  
+  <!-- joints for attaching models to each other -->
   <!-- joint to attach UR10 to mobile base -->
   <joint name="arm_to_mobile_base" type="fixed">
     <origin xyz="0 0 ${.352 / 2}" rpy="0 0 0" />
     <parent link="chassis" />
     <child link="base_link" />    
+  </joint>
+
+  <!-- joint to attach mount for tool to UR10 -->
+  <joint name="mount_to_ur10" type="fixed">
+    <origin xyz="0 0 .005" rpy="0 0 0" />
+    <parent link="tool0" />
+    <child link="mount_link" />    
+  </joint>
+
+  <!-- joint to attach gripper to mount -->
+  <joint name="gripper_to_mount" type="fixed">
+    <origin xyz=".15 0 .205" rpy="0 0 0" />
+    <parent link="mount_link" />
+    <child link="gripper_link" />    
+  </joint>
+
+  <!-- joint to attach camera to mount -->
+  <joint name="camera_to_mount" type="fixed">
+    <origin xyz="-.15 0 .055" rpy="0 0 0" />
+    <parent link="mount_link" />
+    <child link="camera_link" />    
   </joint>
 
   <!-- temp attach mobile base to ground -->
@@ -27,6 +62,6 @@
     <parent link="world" />
     <child link = "chassis" />
     <origin xyz="0.0 0.0 1.0" rpy="0.0 0.0 0.0" />
-  </joint-->
+    </joint-->
       
 </robot>

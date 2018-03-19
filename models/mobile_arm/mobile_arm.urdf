@@ -7,19 +7,6 @@
   <gazebo>
     <!-- turn on self-collision detection so that links will not pass through each other -->
     <self_collide>0</self_collide>
-    <!-- disable the default behavior with PositionJointInterface that causes twists to be cleared -->
-    <preserveWorldVelocity>1</preserveWorldVelocity>
-    <!-- for the mobile base -->
-    <!-- MQMX to (possibly?) replace this with ros control plugin -->
-    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-      <leftJoint>wheel_2_joint</leftJoint>
-      <rightJoint>wheel_5_joint</rightJoint>
-      <robotBaseFrame>chassis</robotBaseFrame>
-      <wheelSeparation>0.56</wheelSeparation>
-      <wheelDiameter>0.142</wheelDiameter>
-      <publishWheelJointState>true</publishWheelJointState>
-      <legacyMode>false</legacyMode>
-    </plugin>
     <!-- for the UR10, copied from $(find ur_description)/urdf/common.gazebo.xacro -->
     <plugin filename="libgazebo_ros_control.so" name="ros_control"/>
   </gazebo>
@@ -222,6 +209,16 @@
     <mu2>0</mu2>
     <material>Gazebo/Red</material>
   </gazebo>
+  <!-- MQMX to (possibly?) replace this with ros control plugin -->
+  <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+    <leftJoint>wheel_2_joint</leftJoint>
+    <rightJoint>wheel_5_joint</rightJoint>
+    <robotBaseFrame>chassis</robotBaseFrame>
+    <wheelSeparation>0.56</wheelSeparation>
+    <wheelDiameter>0.142</wheelDiameter>
+    <publishWheelJointState>true</publishWheelJointState>
+    <legacyMode>false</legacyMode>
+  </plugin>
   <!--
   Author: Kelsey Hawkins
   Contributers: Jimmy Da Silva, Ajit Krisshna N L, Muhammad Asif Rana
@@ -252,7 +249,7 @@
     <child link="shoulder_link"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.1273"/>
     <axis xyz="0 0 1"/>
-    <limit effort="330.0" lower="-6.28318530718" upper="6.28318530718" velocity="2.16"/>
+    <limit effort="330.0" lower="-3.14159265359" upper="3.14159265359" velocity="2.16"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="shoulder_link">
@@ -280,7 +277,7 @@
     <child link="upper_arm_link"/>
     <origin rpy="0.0 1.5707963268 0.0" xyz="0.0 0.220941 0.0"/>
     <axis xyz="0 1 0"/>
-    <limit effort="330.0" lower="-6.28318530718" upper="6.28318530718" velocity="2.16"/>
+    <limit effort="330.0" lower="-3.14159265359" upper="3.14159265359" velocity="2.16"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="upper_arm_link">
@@ -336,7 +333,7 @@
     <child link="wrist_1_link"/>
     <origin rpy="0.0 1.5707963268 0.0" xyz="0.0 0.0 0.5723"/>
     <axis xyz="0 1 0"/>
-    <limit effort="54.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <limit effort="54.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.2"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="wrist_1_link">
@@ -364,7 +361,7 @@
     <child link="wrist_2_link"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.1149 0.0"/>
     <axis xyz="0 0 1"/>
-    <limit effort="54.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <limit effort="54.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.2"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="wrist_2_link">
@@ -392,7 +389,7 @@
     <child link="wrist_3_link"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.1157"/>
     <axis xyz="0 1 0"/>
-    <limit effort="54.0" lower="-6.28318530718" upper="6.28318530718" velocity="3.2"/>
+    <limit effort="54.0" lower="-3.14159265359" upper="3.14159265359" velocity="3.2"/>
     <dynamics damping="0.0" friction="0.0"/>
   </joint>
   <link name="wrist_3_link">
@@ -501,11 +498,85 @@
     <parent link="wrist_3_link"/>
     <child link="tool0"/>
   </joint>
+  <!-- Mount link -->
+  <link name="mount_link">
+    <visual name="visual">
+      <geometry>
+        <box size="0.4 0.05 0.01"/>
+      </geometry>
+    </visual>
+    <collision name="collision">
+      <geometry>
+        <box size="0.4 0.05 0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="3.25e-05" ixy="0.0" ixz="0.0" iyy="0.00200125" iyz="0.0" izz="0.00203125"/>
+    </inertial>
+  </link>
+  <!-- Gripper link -->
+  <link name="gripper_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.4" radius="0.15"/>
+      </geometry>
+      <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <!-- Note: must omit name="foo" because in Gazebo 7 the urdf parser has a bug that would make <gazebo reference="bar"> not work -->
+    <collision>
+      <geometry>
+        <cylinder length="0.4" radius="0.15"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.15"/>
+      <inertia ixx="0.00284375" ixy="0.0" ixz="0.0" iyy="0.00284375" iyz="0.0" izz="0.0016875"/>
+    </inertial>
+  </link>
+  <!-- Camera link -->
+  <link name="camera_link">
+    <visual name="visual">
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </visual>
+    <collision name="collision">
+      <geometry>
+        <box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.000166666666667" ixy="0.0" ixz="0.0" iyy="0.000166666666667" iyz="0.0" izz="0.000166666666667"/>
+    </inertial>
+  </link>
+  <!-- joints for attaching models to each other -->
   <!-- joint to attach UR10 to mobile base -->
   <joint name="arm_to_mobile_base" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0.176"/>
     <parent link="chassis"/>
     <child link="base_link"/>
+  </joint>
+  <!-- joint to attach mount for tool to UR10 -->
+  <joint name="mount_to_ur10" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 .005"/>
+    <parent link="tool0"/>
+    <child link="mount_link"/>
+  </joint>
+  <!-- joint to attach gripper to mount -->
+  <joint name="gripper_to_mount" type="fixed">
+    <origin rpy="0 0 0" xyz=".15 0 .205"/>
+    <parent link="mount_link"/>
+    <child link="gripper_link"/>
+  </joint>
+  <!-- joint to attach camera to mount -->
+  <joint name="camera_to_mount" type="fixed">
+    <origin rpy="0 0 0" xyz="-.15 0 .055"/>
+    <parent link="mount_link"/>
+    <child link="camera_link"/>
   </joint>
   <!-- temp attach mobile base to ground -->
   <!--link name="world" />
@@ -513,6 +584,6 @@
     <parent link="world" />
     <child link = "chassis" />
     <origin xyz="0.0 0.0 1.0" rpy="0.0 0.0 0.0" />
-  </joint-->
+    </joint-->
 </robot>
 

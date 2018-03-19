@@ -6,24 +6,6 @@
     <!-- turn on self-collision detection so that links will not pass through each other -->
     <self_collide>0</self_collide>
 
-
-    <!-- disable the default behavior with PositionJointInterface that causes twists to be cleared -->
-    <!--preserveWorldVelocity>1</preserveWorldVelocity-->
-    <preserve_world_velocity>1</preserve_world_velocity>
-
-    
-    <!-- for the mobile base -->
-    <!-- MQMX to (possibly?) replace this with ros control plugin -->
-    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-      <leftJoint>wheel_2_joint</leftJoint>
-      <rightJoint>wheel_5_joint</rightJoint>
-      <robotBaseFrame>chassis</robotBaseFrame>
-      <wheelSeparation>${chassis_width - wheel_thickness}</wheelSeparation>
-      <wheelDiameter>${2 * wheel_radius}</wheelDiameter>
-      <publishWheelJointState>true</publishWheelJointState>
-      <legacyMode>false</legacyMode>
-    </plugin>
-
     
     <!-- for the UR10, copied from $(find ur_description)/urdf/common.gazebo.xacro -->
     <plugin name="ros_control" filename="libgazebo_ros_control.so" />

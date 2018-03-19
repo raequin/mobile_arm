@@ -1,0 +1,20 @@
+digraph G {
+node [shape=box];
+"gripper_wide_block_p" [label="gripper_wide_block_p"];
+"gripper_side_block_p1" [label="gripper_side_block_p1"];
+"gripper_side_block_p2" [label="gripper_side_block_p2"];
+"gripper_wide_block_d" [label="gripper_wide_block_d"];
+"gripper_side_block_d1" [label="gripper_side_block_d1"];
+"gripper_side_block_d2" [label="gripper_side_block_d2"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"gripper_wide_block_p" -> "block_fixed_joint_p1" [label="xyz: 0.145 0.075 0 \nrpy: 0 -0 0"]
+"block_fixed_joint_p1" -> "gripper_side_block_p1"
+"gripper_wide_block_p" -> "block_fixed_joint_p2" [label="xyz: -0.145 0.075 0 \nrpy: 0 -0 0"]
+"block_fixed_joint_p2" -> "gripper_side_block_p2"
+"gripper_wide_block_p" -> "gripper_joint" [label="xyz: 0 0.29 0 \nrpy: 0 -0 -3.14159"]
+"gripper_joint" -> "gripper_wide_block_d"
+"gripper_wide_block_d" -> "block_fixed_joint_d1" [label="xyz: 0.145 -0.075 0 \nrpy: 0 -0 0"]
+"block_fixed_joint_d1" -> "gripper_side_block_d1"
+"gripper_wide_block_d" -> "block_fixed_joint_d2" [label="xyz: -0.145 -0.075 0 \nrpy: 0 -0 0"]
+"block_fixed_joint_d2" -> "gripper_side_block_d2"
+}
